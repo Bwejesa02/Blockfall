@@ -44,8 +44,7 @@ projectSettings/
 
 # Ignore Unity's TextMeshPro generated files
 Assets/TextMesh Pro/*
-Assets/TextMesh Pro/Resources/
-
+Assets/TextMesh Pro/Resources/    
 
 # Exclude user-specific settings
 *.swp
@@ -53,4 +52,7 @@ Assets/TextMesh Pro/Resources/
 *.sublime-workspace
 *.sublime-project
 
-Assets/JMO Assets/*
+# Ignore JMO Assets folder
+Assets/JMO Assets/
+/Blockfall/Assets/JMO Assets
+/Blockfall/Assets/TextMesh Pro
