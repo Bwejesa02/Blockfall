@@ -44,7 +44,8 @@ projectSettings/
 
 # Ignore Unity's TextMeshPro generated files
 Assets/TextMesh Pro/*
-!Assets/TextMesh Pro/Resources/    # Allow the Resources folder to be committed
+Assets/TextMesh Pro/Resources/
+
 
 # Exclude user-specific settings
 *.swp
@@ -52,5 +53,4 @@ Assets/TextMesh Pro/*
 *.sublime-workspace
 *.sublime-project
 
-# Keep Builds
-# Removed Build/ and Builds/ from ignore list
+Assets/JMO Assets/*
