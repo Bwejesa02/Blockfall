@@ -24277,7 +24277,7 @@ GameObject:
   - component: {fileID: 4645953744633302665}
   - component: {fileID: 7344185590937613973}
   m_Layer: 0
-  m_Name: WFX_Explosion Simple
+  m_Name: GameOverParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

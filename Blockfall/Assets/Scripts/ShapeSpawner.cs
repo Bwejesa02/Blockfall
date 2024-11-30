@@ -72,9 +72,6 @@ public class ShapeSpawner : MonoBehaviour
            Quaternion.identity);
     }
 
-
-
-
     bool CheckIsValidPosition(GameObject shape)
     {
         foreach(Transform mino in shape.transform)
@@ -97,7 +94,6 @@ public class ShapeSpawner : MonoBehaviour
 
         if(savedShape != null)
         {
-            //---There is a saved shape---
             GameObject tempSaveShape = GameObject.FindGameObjectWithTag("CurrentSavedShape");
 
             tempSaveShape.transform.localPosition = new Vector2(10 / 2 ,20);
@@ -122,10 +118,10 @@ public class ShapeSpawner : MonoBehaviour
 
 
         }
+
         else
         {
 
-            //---no shape saved---
             savedShape = (GameObject)Instantiate(GameObject.FindGameObjectWithTag("CurrentActiveShape"));
             if (savedShape == null)
                 Debug.Log("Didnt get");
@@ -137,8 +133,6 @@ public class ShapeSpawner : MonoBehaviour
 
 
             SpawnShape();
-
-
 
         }
     }
@@ -167,7 +161,7 @@ public class ShapeSpawner : MonoBehaviour
         }
 
     }
-    // Use this for initialization
+    
     void Start()
     {
         nextShapeIndex = UnityEngine.Random.Range(0, 7);

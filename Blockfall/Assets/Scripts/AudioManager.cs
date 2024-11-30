@@ -14,7 +14,7 @@ public class AudioManager : MonoBehaviour {
 
     private AudioSource soundEffectAudio;
 
-    // Use this for initialization
+   
     void Start() {
 
         if (Instance == null)

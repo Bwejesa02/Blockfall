@@ -1,9 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameOverMenu : MonoBehaviour
 {
     private CommandInvoker invoker = new CommandInvoker();
+    public Text scoreText; // UI element to display the final score
+
+    void Start()
+    {
+        // Display the final score from Game.FinalScoreText
+        scoreText.text = Game.FinalScoreText;
+    }
 
     public void PlayAgain()
     {

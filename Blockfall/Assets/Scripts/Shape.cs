@@ -4,34 +4,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using InputMapperPlugin; // Import the InputMapper namespace
 
 public class Shape : MonoBehaviour
 {
-
     public static float speed = 1.0f;
     private float lastMovedDown = 0;
     private int spaceFromBottom = 0;
     private float keyDelay = 2f;
     private float timePassed = 0f;
 
-
     Vector2 previousPosition = Vector2.zero;
     Vector2 direction = Vector2.zero;
 
     bool moved = false;
-    
 
     void Start()
     {
         if (!IsInGrid())
         {
             AudioManager.Instance.PlayOneShot(AudioManager.Instance.gameOver);
-
             Invoke("OpenGameOverScene", 0.5f);
-
         }
     }
-
 
     void OpenGameOverScene()
     {
@@ -44,52 +39,49 @@ public class Shape : MonoBehaviour
         Shape.speed -= 0.005f * level;
     }
 
-    
     void Update()
     {
         CheckUserInput();
- 
     }
 
     void CheckUserInput()
     {
-        //move shape left
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+        // Get movement input from InputMapper
+        Vector2 movementInput = InputMapper.GetMovementInput();
+
+        if (movementInput.x < 0)
         {
             MoveLeft();
         }
-
-        //Move shape Right
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+        else if (movementInput.x > 0)
         {
             MoveRight();
         }
 
-        timePassed += Time.deltaTime;
-
-        //move the shape down once
-        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S) || Time.time - lastMovedDown >= Shape.speed)
+        // Check for drop input
+        if (InputMapper.IsDropPressed())
         {
-            MoveDown();
-
+            DropDown();
         }
 
-        //rotate shape 90 degrees
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        // Check for rotate input
+        if (InputMapper.IsRotatePressed())
         {
             Rotate();
         }
 
-        //If Shift is pressed, save current shape
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        timePassed += Time.deltaTime;
+
+        // Move down based on speed or user input
+        if (movementInput.y < 0 || Time.time - lastMovedDown >= Shape.speed)
         {
-            SaveShape();
+            MoveDown();
         }
 
-        //Instantly drop the shape to the available space at the bottom
-        if (Input.GetKeyDown(KeyCode.Space))
+        // Check for save shape input
+        if (Input.GetKeyDown(KeyCode.LeftShift)) // Optional: Keep specific keyboard keys for non-standard actions
         {
-            DropDown();
+            SaveShape();
         }
     }
 
@@ -136,25 +128,21 @@ public class Shape : MonoBehaviour
             {
                 Game.DeleteFullRows();
                 IncreaseScore();
-
-
             }
+
             enabled = false;
             tag = "Untagged";
 
             FindObjectOfType<ShapeSpawner>().SpawnShape();
-
         }
         else
         {
             UpdateGame();
             AudioManager.Instance.PlayOneShot(AudioManager.Instance.shapeMove);
-
         }
 
         spaceFromBottom++;
         lastMovedDown = Time.time;
-
     }
 
     void Rotate()
@@ -177,42 +165,32 @@ public class Shape : MonoBehaviour
         transform.position = FindObjectOfType<GhostShape>().GetPosition();
         if (!IsInGrid())
         {
-
             bool rowDeleted = Game.DeleteFullRows();
 
             if (rowDeleted)
             {
                 Game.DeleteFullRows();
                 IncreaseScore();
-
-
             }
+
             enabled = false;
             tag = "Untagged";
 
             FindObjectOfType<ShapeSpawner>().SpawnShape();
-
         }
         else
         {
             UpdateGame();
             AudioManager.Instance.PlayOneShot(AudioManager.Instance.shapeMove);
-
         }
 
-        
         lastMovedDown = 0;
-
-
     }
-
-
 
     public void SaveShape()
     {
         GameObject save = GameObject.FindGameObjectWithTag("CurrentActiveShape");
         FindObjectOfType<ShapeSpawner>().SaveShape(save.transform);
-
     }
 
     public bool IsInGrid()
@@ -226,8 +204,8 @@ public class Shape : MonoBehaviour
                 return false;
             }
 
-            if (Game.gameBoard[(int)vect.x-1, (int)vect.y-1] != null &&
-                Game.gameBoard[(int)vect.x-1, (int)vect.y-1].parent != transform)
+            if (Game.gameBoard[(int)vect.x - 1, (int)vect.y - 1] != null &&
+                Game.gameBoard[(int)vect.x - 1, (int)vect.y - 1].parent != transform)
             {
                 return false;
             }
@@ -252,7 +230,6 @@ public class Shape : MonoBehaviour
                     Game.gameBoard[x, y].parent == transform)
                 {
                     Game.gameBoard[x, y] = null;
-                    //Debug.Log("This is true");
                 }
             }
         }
@@ -261,12 +238,7 @@ public class Shape : MonoBehaviour
         {
             Vector2 vect = RoundVector(childBlock.position);
 
-
-            Game.gameBoard[(int)vect.x-1, (int)vect.y-1] = childBlock;
-
-            //Debug.Log("Cube at:" + vect.x + " " + vect.y);
-
-
+            Game.gameBoard[(int)vect.x - 1, (int)vect.y - 1] = childBlock;
         }
     }
 
@@ -280,9 +252,8 @@ public class Shape : MonoBehaviour
         var textComp = GameObject.Find("Score").GetComponent<Text>();
         int score = int.Parse(textComp.text);
 
-        score+=100;
+        score += 100;
 
         textComp.text = score.ToString();
     }
 }
-

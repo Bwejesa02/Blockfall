@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
+    public static string FinalScoreText; 
+
     public static Transform[,] gameBoard = new Transform[10, 20];
     private static int numRowsDel = 0;
     private static int _score = 0;
@@ -10,13 +13,6 @@ public class Game : MonoBehaviour
     static int level = 1;
     static int lineClearsNeeded = 5;
     static int levelLineClearsNeeded = 5;
-
-    private HighScoreWriter highScoreWriter;
-
-    void Start()
-    {
-        highScoreWriter = new HighScoreWriter();
-    }
 
     public static int GetRowsDel()
     {
@@ -37,10 +33,10 @@ public class Game : MonoBehaviour
 
             Shape.IncreaseSpeed(level);
 
-            var textL = GameObject.Find("Level").GetComponent<UnityEngine.UI.Text>();
+            var textL = GameObject.Find("Level").GetComponent<Text>();
             textL.text = level.ToString();
 
-            var textC = GameObject.Find("LinesToClear").GetComponent<UnityEngine.UI.Text>();
+            var textC = GameObject.Find("LinesToClear").GetComponent<Text>();
             textC.text = levelLineClearsNeeded.ToString();
             lineClearsNeeded = levelLineClearsNeeded;
         }
@@ -49,7 +45,7 @@ public class Game : MonoBehaviour
     public static void ClearLine()
     {
         lineClearsNeeded--;
-        var textC = GameObject.Find("LinesToClear").GetComponent<UnityEngine.UI.Text>();
+        var textC = GameObject.Find("LinesToClear").GetComponent<Text>();
         textC.text = lineClearsNeeded.ToString();
     }
 
@@ -63,7 +59,6 @@ public class Game : MonoBehaviour
                 numRowsDel++;
 
                 AudioManager.Instance.PlayOneShot(AudioManager.Instance.rowDelete);
-                ParticleFactory.CreateParticleEffect("RowClear", new Vector3(5, r, 0));
                 Game.ClearLine();
                 Game.NextLevelCheck();
 
@@ -136,7 +131,11 @@ public class Game : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("Game Over!");
-        ParticleFactory.CreateParticleEffect("GameOver", new Vector3(5, 10, 0));
-        highScoreWriter.WriteHighScore(_score);
+
+        // Set FinalScoreText to the current score display
+        FinalScoreText = GameObject.Find("Score").GetComponent<Text>().text;
+
+        // Load the game over scene
+        SceneManager.LoadScene("GameOver");
     }
 }

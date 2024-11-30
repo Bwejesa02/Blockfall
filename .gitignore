@@ -44,7 +44,7 @@ projectSettings/
 
 # Ignore Unity's TextMeshPro generated files
 Assets/TextMesh Pro/*
-Assets/TextMesh Pro/Resources/    
+!Assets/TextMesh Pro/Resources/    # Allow the Resources folder to be committed
 
 # Exclude user-specific settings
 *.swp
